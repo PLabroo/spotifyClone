@@ -17,6 +17,6 @@ export const requiredAdmin = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    console.log('Error in requiredAdmin middleware', error);
+    next(error);
   }
 };

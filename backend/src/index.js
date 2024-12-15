@@ -21,7 +21,13 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); // to parse the request body
 
-app.use(clerkMiddleware()); // will add auth to req.obj=>req.auth
+// will add auth to req.obj=>req.auth
+app.use(
+  clerkMiddleware({
+    publishableKey: process.env.VITE_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.VITE_CLERK_SECRET_KEY,
+  })
+);
 
 app.use(
   fileUpload({
