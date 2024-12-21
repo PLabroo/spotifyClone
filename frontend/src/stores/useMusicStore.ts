@@ -7,9 +7,9 @@ export interface Album {
   artist: string;
   releaseYear: number;
   imageUrl: string;
-  songs: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  songs: Song[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Song {
@@ -20,8 +20,8 @@ export interface Song {
   audioUrl: string;
   duration: number;
   albumId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface MusicStore {
@@ -29,7 +29,9 @@ export interface MusicStore {
   songs: Song[];
   isLoading: boolean;
   error: string | null;
+  currentAlbum: Album;
   fetchAlbums: () => Promise<void>;
+  fetchAlbumById: (id: string) => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -37,14 +39,27 @@ export const useMusicStore = create<MusicStore>((set) => ({
   songs: [],
   isLoading: false,
   error: null,
+  currentAlbum: {} as Album,
   fetchAlbums: async () => {
     // data fetching logic goes here
     set({ isLoading: true, error: null });
 
     try {
       const response = await axiosInstance.get('/albums');
-      console.log('response', response);
       set({ albums: response.data.albums });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      set({ error: error.response.data.message });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchAlbumById: async (id) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.get(`/albums/${id}`);
+      set({ currentAlbum: response.data.album });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       set({ error: error.response.data.message });
