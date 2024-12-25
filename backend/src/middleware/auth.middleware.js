@@ -1,4 +1,10 @@
-import { clerkClient } from '@clerk/express';
+import { createClerkClient } from '@clerk/express';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const clerkClient = createClerkClient({
+  secretKey: process.env.VITE_CLERK_SECRET_KEY,
+});
 
 export const protectRoute = async (req, res, next) => {
   if (!req.auth.userId) {

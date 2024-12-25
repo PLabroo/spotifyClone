@@ -23,8 +23,6 @@ const AlbumPage = () => {
 
   if (isLoading) return null;
 
-  console.log('current', currentAlbum);
-
   //   const handlePlayAlbum = () => {
   //     if (!currentAlbum) return;
 
